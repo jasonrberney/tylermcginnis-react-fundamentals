@@ -1,19 +1,35 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var Link = require('react-router-dom').Link;
-var PlayerPreview = require('./PlayerPreview');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import PlayerPreview from './PlayerPreview';
 
 class PlayerInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: ''
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired,
   }
-  handleChange(event) {
+  static defaultProps = {
+    label: 'Username',
+  }
+  // BELOW is ES5 w/o using babel-plugin-transform-class-properties
+  // CHANGED 'state=' and arrow functions in handleChange and handleSubmit
+  // NO NEED to worry about binding, nor a constructor for initial state
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     username: ''
+  //   };
+
+  //   this.handleChange = this.handleChange.bind(this);
+  //   this.handleSubmit = this.handleSubmit.bind(this);
+  // }
+
+  state = {
+    username: ''
+  }
+
+  handleChange = (event) => {
     var value = event.target.value;
 
     this.setState(function () {
@@ -22,7 +38,7 @@ class PlayerInput extends React.Component {
       }
     });
   }
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
 
     this.props.onSubmit(
@@ -53,29 +69,25 @@ class PlayerInput extends React.Component {
   }
 }
 
-PlayerInput.propTypes = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-}
-
-PlayerInput.defaultProps = {
-  label: 'Username',
-}
-
 class Battle extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      playerOneName: '',
-      playerTwoName: '',
-      playerOneImage: null,
-      playerTwoImage: null,
-    };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
+  state = {
+    playerOneName: '',
+    playerTwoName: '',
+    playerOneImage: null,
+    playerTwoImage: null,
   }
-  handleSubmit(id, username) {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     playerOneName: '',
+  //     playerTwoName: '',
+  //     playerOneImage: null,
+  //     playerTwoImage: null,
+  //   };
+
+  //   this.handleSubmit = this.handleSubmit.bind(this);
+  // }
+  handleSubmit = (id, username) => {
     this.setState(function () {
       var newState = {};
       newState[id + 'Name'] = username;
@@ -83,7 +95,7 @@ class Battle extends React.Component {
       return newState;
     });
   }
-  handleReset(id) {
+  handleReset = (id) => {
     this.setState(function () {
       var newState = {};
       newState[id + 'Name'] = '';
@@ -152,4 +164,4 @@ class Battle extends React.Component {
   }
 }
 
-module.exports = Battle;
+export default Battle;

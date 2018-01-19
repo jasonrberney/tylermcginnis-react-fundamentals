@@ -1,7 +1,7 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var api = require('../utils/api');
-var Loading = require('./Loading');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { fetchPopularRepos } from '../utils/api';
+import Loading from './Loading';
 
 function SelectLanguage (props) {
   var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'];
@@ -57,19 +57,23 @@ SelectLanguage.propTypes = {
 };
 
 class Popular extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      selectedLanguage: 'All',
-      repos: null,
-    };
-
-    this.updateLanguage = this.updateLanguage.bind(this);
+  state = {
+    selectedLanguage: 'All',
+    repos: null,
   }
+  // constructor(props) {
+  //   super();
+  //   this.state = {
+  //     selectedLanguage: 'All',
+  //     repos: null,
+  //   };
+
+  //   this.updateLanguage = this.updateLanguage.bind(this);
+  // }
   componentDidMount() {
     this.updateLanguage(this.state.selectedLanguage)
   }
-  updateLanguage(lang) {
+  updateLanguage = async (lang) => {
     this.setState(function () {
       return {
         selectedLanguage: lang,
@@ -77,14 +81,17 @@ class Popular extends React.Component {
       }
     });
 
-    api.fetchPopularRepos(lang)
-      .then(function (repos) {
-        this.setState(function () {
-          return {
-            repos: repos
-          }
-        });
-      }.bind(this));
+    const repos = await fetchPopularRepos(lang);
+    this.setState(() => ({ repos}))
+    // BELOW is pre - using async/await
+    // fetchPopularRepos(lang)
+    //   .then(function (repos) {
+    //     this.setState(function () {
+    //       return {
+    //         repos: repos
+    //       }
+    //     });
+    //   }.bind(this));
   }
   render() {
     return (
@@ -100,4 +107,4 @@ class Popular extends React.Component {
   }
 }
 
-module.exports = Popular;
+export default Popular;
